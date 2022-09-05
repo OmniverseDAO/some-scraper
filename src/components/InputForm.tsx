@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent } from "react";
+import React, { ChangeEvent, FormEvent, useState } from "react";
 import { ethers } from 'ethers'
 
 type SubmitEvent = FormEvent<HTMLFormElement>;
@@ -19,19 +19,23 @@ const InputForm: React.FC<Props> = ({
     handleOnSubmit,
     placeholder,
 }) => {
+  const [provider, setProvider] = useState<ethers.providers.Web3Provider>()
   if (!window.ethereum){return <>No Web3 Provider</>}
-  const provider: ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum)
-  const accounts =  provider.send("eth_requestAccounts", []);
-  const handleClick = async (_someVar: any, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    const a = await accounts.then((result)=>{
-        console.log(result[0])
-        console.log(_someVar, e);
-        return result[0]  
-    })
-  if (!a) {} else { 
-    if (!ethers.utils.isAddress(contractAddress)) {return <></>} else { setUserAddress(a) }
+
+  
+  const getProvider = async () => {
+    const prov: ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum)
+    setProvider(provider)
+    const accounts =  await prov.send("eth_requestAccounts", []);
+    setUserAddress(accounts[0])
   }
-};
+
+  const handleClick = async (_someVar: any, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    getProvider()
+    if (!provider) {return <>Connect Wallet</>} else { 
+      if (!ethers.utils.isAddress(contractAddress)) {return <></>}
+    }
+  };
 
   return (
     <>
