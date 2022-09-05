@@ -5,7 +5,6 @@ import { ethers } from "ethers";
 import InputForm from './components/InputForm';
 import GetNFTs from './components/IdFinder'
 
-
 const App: React.FC = () => {
   const inputText = '0x...<SomeNftAddress>'
 //  const deadAddress = '0x000000000000000000000000000000000000dEaD'
@@ -14,23 +13,26 @@ const App: React.FC = () => {
   const [someMsg, setSomeMsg] = useState<string>('')
   const [inputContract, setInputState] = useState("")
   const [loaded, setLoaded] = React.useState<boolean>(false)
+  const [valid, setValid] = useState<boolean>(false)
 
   const handleOnSubmit = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     setTokenIds(undefined)
     setSomeMsg('')
-    if (!ethers.utils.isAddress(inputContract)) { setSomeMsg('need valid address'); return }
-    console.log(inputContract);
     setLoaded(false)
+    if (!ethers.utils.isAddress(inputContract)) { setSomeMsg('Need Valid Address'); setValid(false); return }
+    else { setValid(true) }
+    console.log(inputContract);
+    
   };
 
   useEffect(() => {
     try{ 
-      window.ethereum.on('accountsChanged', function () { clearStored(); })
+      //window.ethereum.on('accountsChanged', function () { clearStored(); })
     } catch (e) {console.error(e)}
-    
+    if (!valid){ setTokenIds(undefined) }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [valid])
 
   const clearStored = () => {
     tokenIds?.clear()
@@ -38,13 +40,15 @@ const App: React.FC = () => {
     setSomeMsg('')
   }
 
-  return (
+    return (
     <div className="App">
       <header className="App-header">
         <>
         <h1>Zem's NFT Scraper</h1>
           <img src={logo} className="App-logo" alt="logo" />
           <InputForm
+            setMessage = {setSomeMsg} 
+            setValid = {setValid}
             setUserAddress = {setUserAddress}
             contractAddress={inputContract}
             setContractAddress={setInputState}
@@ -52,7 +56,7 @@ const App: React.FC = () => {
             placeholder={inputText}
           />
           <h5 hidden={!someMsg}>{someMsg}</h5>
-          <h5>
+          <h5 hidden={!valid}>
             <label hidden={!tokenIds}>Found Token IDs:</label>
             <p></p>
             <GetNFTs 

@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { ethers } from 'ethers'
 
 type Props = {
     tokenIds: Map<number, []> | undefined,
@@ -15,11 +16,11 @@ export const GetNFTs: React.FC<Props> = ({
     contractAddress,
     userAddress,
     loaded,
-    setLoaded
+    setLoaded,
 }) => {
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
     useEffect(() => {
-        if (!isLoading) {
+        if (!isLoading && !tokenIds) {
             const API_KEY = process.env.REACT_APP_MORALIS_API_KEY
             if (!API_KEY) { alert('moralis api key not set in env') } else {
                 const options = {
@@ -43,7 +44,8 @@ export const GetNFTs: React.FC<Props> = ({
                         else {
                             r.forEach((someValue: any) => {
                                 if (someValue.token_id !== undefined){
-                                    idMap.set(someValue.token_id, JSON.parse(someValue.metadata).attributes)                                  
+                                    idMap.set(someValue.token_id, JSON.parse(someValue.metadata).attributes)
+                                    //console.log(JSON.parse(someValue.metadata).image)
                                 }
                             })
                         }
@@ -70,7 +72,6 @@ export const GetNFTs: React.FC<Props> = ({
                 traits.push(React.createElement("div", {key: itemKey++}, jsonItem.trait_type, ' : ', jsonItem.value))
                 jsonItemList.push(jsonItem) 
             }
-            
         }
         console.log(key, jsonItemList)
         const component = React.createElement("div", {key: key}, '#', key, <br></br>, traits, <p></p>)

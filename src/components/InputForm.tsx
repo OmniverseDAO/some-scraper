@@ -1,39 +1,64 @@
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import { ethers } from 'ethers'
+import Web3Modal from "web3modal";
+import WalletConnectProvider from "@walletconnect/web3-provider";
+
+const API_KEY = process.env.REACT_APP_INFRA_API_KEY
+
+const providerOptions = {
+  walletconnect: {
+    package: WalletConnectProvider, // required
+    options: {
+      infuraId: API_KEY // required
+    }
+  }
+};
+
+const web3Modal = new Web3Modal({
+  network: "mainnet", // optional
+  cacheProvider: true, // optional
+  providerOptions // required
+});
 
 type SubmitEvent = FormEvent<HTMLFormElement>;
 type InputEvent = ChangeEvent<HTMLInputElement>;
 
 type Props = {
-    setUserAddress: (val: string) => void;
-    contractAddress: string;
-    setContractAddress: (val: string) => void;
-    handleOnSubmit: (e: SubmitEvent) => void;
-    placeholder: string;
+  setMessage: (val: string) => void;
+  setValid: (val: boolean) => void;
+  setUserAddress: (val: string) => void;
+  contractAddress: string;
+  setContractAddress: (val: string) => void;
+  handleOnSubmit: (e: SubmitEvent) => void;
+  placeholder: string;
 };
 
 const InputForm: React.FC<Props> = ({
-    setUserAddress,
-    contractAddress,
-    setContractAddress,
-    handleOnSubmit,
-    placeholder,
+  setMessage,
+  setValid,
+  setUserAddress,
+  contractAddress,
+  setContractAddress,
+  handleOnSubmit,
+  placeholder,
 }) => {
+  
   const [provider, setProvider] = useState<ethers.providers.Web3Provider>()
   if (!window.ethereum){return <>No Web3 Provider</>}
 
   
   const getProvider = async () => {
-    const prov: ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum)
+    const instance = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(instance);
+    const signer = provider.getSigner();
     setProvider(provider)
-    const accounts =  await prov.send("eth_requestAccounts", []);
-    setUserAddress(accounts[0])
+    setUserAddress(await signer.getAddress())
   }
 
   const handleClick = async (_someVar: any, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     getProvider()
     if (!provider) {return <>Connect Wallet</>} else { 
-      if (!ethers.utils.isAddress(contractAddress)) {return <></>}
+      
     }
   };
 
@@ -43,7 +68,13 @@ const InputForm: React.FC<Props> = ({
             <input
               type="text"
               value={contractAddress}
-              onChange={(e: InputEvent) => setContractAddress(e.target.value)}
+              onChange={(e: InputEvent) => {
+                if (!ethers.utils.isAddress(contractAddress)) {
+                  setMessage('Need Valid Address')
+                  setValid(false)
+                } else { setMessage(''); setValid(true)}
+                setContractAddress(e.target.value)
+              }}
               placeholder={placeholder} 
             />
             <br></br>
