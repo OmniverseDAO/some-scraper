@@ -44,9 +44,7 @@ const InputForm: React.FC<Props> = ({
 }) => {
   
   const [provider, setProvider] = useState<ethers.providers.Web3Provider>()
-  if (!window.ethereum){return <>No Web3 Provider</>}
-
-  
+    
   const getProvider = async () => {
     const instance = await web3Modal.connect();
     const provider = new ethers.providers.Web3Provider(instance);
