@@ -1,7 +1,7 @@
+# * Set .env with moralis and infra API keys
+
+
 # Getting Started with Create React App
-
-* Set .env with moralis API *
-
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
