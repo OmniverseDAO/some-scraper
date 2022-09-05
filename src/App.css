@@ -37,8 +37,7 @@
   }
 }
 
-
-
+/* default button */
 button {
   -webkit-appearance: button;
   -webkit-writing-mode: horizontal-tb !important;
@@ -65,16 +64,19 @@ button {
   border-image: initial;
 }
 
+button:active {
+  cursor: grabbing;
+}
+
+/* get class button */
 button.get {
   background-color: seagreen;
   font: 400 18px system-ui;
   padding: 1em;
-  cursor: grab;
+  cursor:pointer;
   color: lavender;
-
   text-shadow: 1px 2px grey;
 }
-
 button.get:hover {
   background-color: chartreuse;
   color: blueviolet;
@@ -82,19 +84,16 @@ button.get:hover {
   text-shadow: none;
 }
 
-button.get:active {
-  cursor: grabbing;
-}
-
+/* default input box */
 input {
   background-color: lightgoldenrodyellow;
   color: darkviolet;
-  margin: 1em;
-  font: 400 18px system-ui;
-  inline-size: 23em;
-  padding-left: 1em;
+  margin-bottom: 1em;
+  font: 400 16px system-ui;
+  inline-size: 22.5em;
+  padding-left: .2em;
 }
-
+/* color change  */
 input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
   color: crimson;
   opacity: 1; /* Firefox */

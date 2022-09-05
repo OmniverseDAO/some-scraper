@@ -8,6 +8,7 @@ type Props = {
     userAddress: string;
     loaded: boolean;
     setLoaded: (val: boolean) => void;
+    valid: boolean;
 }
 
 export const GetNFTs: React.FC<Props> = ({
@@ -17,6 +18,7 @@ export const GetNFTs: React.FC<Props> = ({
     userAddress,
     loaded,
     setLoaded,
+    valid,
 }) => {
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
     useEffect(() => {
@@ -30,7 +32,7 @@ export const GetNFTs: React.FC<Props> = ({
                         'X-API-Key': API_KEY
                     }
                 }
-                if (!userAddress || !contractAddress || loaded) {} else {
+                if (!userAddress || !valid || loaded) {} else {
                     setIsLoading(true)
                     setTokenIds(new Map<number, []>())
                     const fetchUrl = 'https://deep-index.moralis.io/api/v2/' + 

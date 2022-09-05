@@ -17,11 +17,10 @@ const App: React.FC = () => {
 
   const handleOnSubmit = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
-    setTokenIds(undefined)
-    setSomeMsg('')
-    setLoaded(false)
-    if (!ethers.utils.isAddress(inputContract)) { setSomeMsg('Need Valid Address'); setValid(false); return }
-    else { setValid(true) }
+    setTokenIds(undefined) //clear any save ids
+    setSomeMsg('') //hides message block
+    setLoaded(false) //resets loaded before new fetch
+   
     console.log(inputContract);
     
   };
@@ -48,6 +47,7 @@ const App: React.FC = () => {
           <img src={logo} className="App-logo" alt="logo" />
           <InputForm
             setMessage = {setSomeMsg} 
+            valid={valid}
             setValid = {setValid}
             setUserAddress = {setUserAddress}
             contractAddress={inputContract}
@@ -66,6 +66,7 @@ const App: React.FC = () => {
               contractAddress={inputContract}
               loaded={loaded}
               setLoaded={setLoaded}
+              valid={valid}
             />
           </h5>
         </>

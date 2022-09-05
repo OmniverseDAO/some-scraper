@@ -2,6 +2,7 @@ import React, { ChangeEvent, FormEvent, useState } from "react";
 import { ethers } from 'ethers'
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
+import { BlobOptions } from "buffer";
 
 const API_KEY = process.env.REACT_APP_INFRA_API_KEY
 
@@ -25,6 +26,7 @@ type InputEvent = ChangeEvent<HTMLInputElement>;
 
 type Props = {
   setMessage: (val: string) => void;
+  valid: boolean;
   setValid: (val: boolean) => void;
   setUserAddress: (val: string) => void;
   contractAddress: string;
@@ -35,6 +37,7 @@ type Props = {
 
 const InputForm: React.FC<Props> = ({
   setMessage,
+  valid,
   setValid,
   setUserAddress,
   contractAddress,
@@ -54,25 +57,25 @@ const InputForm: React.FC<Props> = ({
   }
 
   const handleClick = async (_someVar: any, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    if (!valid) { return }
     getProvider()
-    if (!provider) {return <>Connect Wallet</>} else { 
-      
-    }
   };
 
+  const handleInputChange = async (e: InputEvent) => {
+    e.preventDefault();
+    if (!ethers.utils.isAddress(e.target.value) ) { setValid(false); setMessage('Need Valid Address') } 
+    else { setValid(true); setMessage('') }
+    setContractAddress(e.target.value)
+      
+  }
+  
   return (
     <>
         <form onSubmit={handleOnSubmit}>
             <input
               type="text"
               value={contractAddress}
-              onChange={(e: InputEvent) => {
-                if (!ethers.utils.isAddress(contractAddress)) {
-                  setMessage('Need Valid Address')
-                  setValid(false)
-                } else { setMessage(''); setValid(true)}
-                setContractAddress(e.target.value)
-              }}
+              onChange={handleInputChange}
               placeholder={placeholder} 
             />
             <br></br>
