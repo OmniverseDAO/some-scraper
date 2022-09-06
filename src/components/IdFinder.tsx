@@ -9,7 +9,6 @@ type Props = {
 }
 
 export const GetNFTs: React.FC<Props> = ({
-
     contractAddress,
     userAddress,
     loaded,
@@ -61,7 +60,7 @@ export const GetNFTs: React.FC<Props> = ({
             }
         }
     },[contractAddress, isLoading, loaded, setImages, setLoaded, setTokenIds, tokenIds, userAddress, valid])
-    if (tokenIds === undefined){return <></>}
+    if (tokenIds === undefined){return <>None Found</>}
     const rendered: React.ReactElement[]= [];
     let itemKey = 0
     for(let [key, value] of tokenIds) {
@@ -75,8 +74,10 @@ export const GetNFTs: React.FC<Props> = ({
             }
         }
         console.log(key, jsonItemList)
-        let keyImage = images?.get(key)       
-        keyImage = 'https://ipfs.io/ipfs/' + keyImage?.slice(7, keyImage.length)
+        let keyImage = images?.get(key)
+        if (keyImage?.substring(0,7) === 'ipfs://') { 
+            keyImage = 'https://ipfs.io/ipfs/' + keyImage?.slice(7, keyImage.length)
+        }
         let someImage = <></>
         if (!images) { } else { someImage = React.createElement("img", {src: keyImage}, null) }
         const component = React.createElement("div", {key: key}, <h2>#{key}</h2>, traits, someImage, <p><br></br></p>)
