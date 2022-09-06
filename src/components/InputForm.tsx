@@ -7,7 +7,6 @@ type InputEvent = ChangeEvent<HTMLInputElement>;
 type Props = {
   setValid: (val: boolean) => void;
   setSomeMsg: (val: string) => void;
-  setUserAddress: (val: string) => void;
   contractAddress: string;
   setContractAddress: (val: string) => void;
   handleOnSubmit: (e: SubmitEvent) => void;
@@ -29,7 +28,7 @@ const InputForm: React.FC<Props> = ({
 
   const handleInputChange = async (e: InputEvent) => {
     e.preventDefault();
-    if (!ethers.utils.isAddress(contractAddress) ) { setValid(false); setSomeMsg('Need Valid Address') } 
+    if (!ethers.utils.isAddress(e.target.value) ) { setValid(false); setSomeMsg('Need Valid Address') } 
     setContractAddress(e.target.value)
   }
   

@@ -7,34 +7,17 @@ import { ethers } from 'ethers'
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 
-
-
-
 const App: React.FC = () => {
-  const inputText = '0x...<SomeNftAddress>'
-//  const deadAddress = '0x000000000000000000000000000000000000dEaD'
-
+  const inputPlaceholder = '0x...<SomeNftAddress>'
   const [userAddress, setUserAddress] = useState<string>('')
   const [someMsg, setSomeMsg] = useState<string>('')
-  const [inputContract, setInputState] = useState("")
+  const [contractAddress, setContractAddress] = useState("")
   const [loaded, setLoaded] = React.useState<boolean>(false)
   const [valid, setValid] = useState<boolean>(false)
   const [provider, setProvider] = useState<ethers.providers.Web3Provider>()
-  const [library, setLibrary] = useState<ethers.providers.Web3Provider>();
   const [web3Modal, setWeb3Modal] = useState<Web3Modal>()
   const [network, setNetwork] = useState<ethers.providers.Network>();
   const [account, setAccount] = useState<string>();
-
-  const handleOnSubmit = (e: { preventDefault: () => void; }) => {
-    e.preventDefault();
-    getProvider()
-    if (!ethers.utils.isAddress(inputContract) ) { setValid(false); setSomeMsg('Need Valid Address') } 
-    else { setValid(true); setSomeMsg('') }
-    setSomeMsg('') //hides message block
-    setLoaded(false) //resets loaded before new fetch
-    console.log(inputContract);
-    
-  };
 
   useEffect(() => {
       const API_KEY = process.env.REACT_APP_INFRA_API_KEY
@@ -52,6 +35,7 @@ const App: React.FC = () => {
         providerOptions 
       });
       setWeb3Modal(newWeb3Modal)
+
       if (provider?.on) {
         const handleAccountsChanged = (accounts: React.SetStateAction<string | undefined>) => {
           setAccount(accounts);
@@ -88,7 +72,7 @@ const App: React.FC = () => {
   };
 
   const disconnect = async () => {
-    if(web3Modal){ web3Modal.clearCachedProvider() }
+    if(!web3Modal){} else { web3Modal.clearCachedProvider() }
     refreshState();
   };
 
@@ -98,18 +82,27 @@ const App: React.FC = () => {
       const instance = await web3Modal.connect();
       const web3Provider = new ethers.providers.Web3Provider(instance);
       const signer = web3Provider.getSigner();
+      const network = await web3Provider.getNetwork();
+      const accounts = await web3Provider.listAccounts();
       setProvider(instance);
-      setLibrary(web3Provider);
       setUserAddress(await signer.getAddress())
-      if(!library){return}
-      const network = await library.getNetwork();
-      const accounts = await library.listAccounts();
       if (accounts) setAccount(accounts[0]);
       setNetwork(network)
     } catch (error) {
       console.error(error);
     }
   }
+
+  const handleOnSubmit = (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+    getProvider()
+    if (!ethers.utils.isAddress(contractAddress) ) { setValid(false); setSomeMsg('Need Valid Address') } 
+    else { setValid(true); setSomeMsg('') }
+    setSomeMsg('') //hides message block
+    setLoaded(false) //resets loaded before new fetch
+    console.log(contractAddress);
+    
+  };
 
   return (
   <div className="App">
@@ -125,18 +118,17 @@ const App: React.FC = () => {
         </h6>
         <div hidden={!someMsg}>{someMsg}</div>
         <InputForm
-          setValid = {setValid}
+          setValid={setValid}
           setSomeMsg={setSomeMsg}
-          setUserAddress = {setUserAddress}
-          contractAddress={inputContract}
-          setContractAddress={setInputState}
+          contractAddress={contractAddress}
+          setContractAddress={setContractAddress}
           handleOnSubmit={handleOnSubmit}
-          placeholder={inputText}
+          placeholder={inputPlaceholder}
         />
         <h5 hidden={!valid}>
           <GetNFTs 
             userAddress={userAddress}
-            contractAddress={inputContract}
+            contractAddress={contractAddress}
             loaded={loaded}
             setLoaded={setLoaded}
             valid={valid}
@@ -144,7 +136,6 @@ const App: React.FC = () => {
         </h5>
       </>
     </header>
-
   </div>
   );
 }
