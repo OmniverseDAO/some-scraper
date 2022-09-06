@@ -2,7 +2,6 @@ import React, { ChangeEvent, FormEvent, useState } from "react";
 import { ethers } from 'ethers'
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
-import { BlobOptions } from "buffer";
 
 const API_KEY = process.env.REACT_APP_INFRA_API_KEY
 
@@ -66,7 +65,6 @@ const InputForm: React.FC<Props> = ({
     if (!ethers.utils.isAddress(e.target.value) ) { setValid(false); setMessage('Need Valid Address') } 
     else { setValid(true); setMessage('') }
     setContractAddress(e.target.value)
-      
   }
   
   return (

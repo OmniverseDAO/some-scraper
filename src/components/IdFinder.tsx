@@ -1,9 +1,6 @@
-import React, { useEffect } from 'react';
-import { ethers } from 'ethers'
+import React from 'react';
 
 type Props = {
-    tokenIds: Map<number, []> | undefined,
-    setTokenIds: (val: Map<number, []>) => void;
     contractAddress: string;
     userAddress: string;
     loaded: boolean;
@@ -12,8 +9,7 @@ type Props = {
 }
 
 export const GetNFTs: React.FC<Props> = ({
-    tokenIds,
-    setTokenIds,
+
     contractAddress,
     userAddress,
     loaded,
@@ -21,7 +17,9 @@ export const GetNFTs: React.FC<Props> = ({
     valid,
 }) => {
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
-    useEffect(() => {
+    const [tokenIds, setTokenIds] = React.useState<Map<number, []>>()
+    const [images, setImages] = React.useState<Map<number, string>>()
+    React.useEffect(() => {
         if (!isLoading && !tokenIds) {
             const API_KEY = process.env.REACT_APP_MORALIS_API_KEY
             if (!API_KEY) { alert('moralis api key not set in env') } else {
@@ -41,17 +39,20 @@ export const GetNFTs: React.FC<Props> = ({
                     .then(response => response.json())
                     .then(response => { 
                         let idMap = new Map<number, []>()
+                        let imageMap = new Map<number, string>()
                         const r = response.result
+                        console.log(r)
                         if (!r || r.length === 0) {} 
                         else {
                             r.forEach((someValue: any) => {
                                 if (someValue.token_id !== undefined){
                                     idMap.set(someValue.token_id, JSON.parse(someValue.metadata).attributes)
-                                    //console.log(JSON.parse(someValue.metadata).image)
+                                    imageMap.set(someValue.token_id, JSON.parse(someValue.metadata).image)
                                 }
                             })
                         }
                         setTokenIds(idMap)
+                        setImages(imageMap)
                         setLoaded(true)
                     })
                     .catch(err => console.error(err))
@@ -59,12 +60,10 @@ export const GetNFTs: React.FC<Props> = ({
                 }      
             }
         }
-    },[contractAddress, isLoading, loaded, setLoaded, setTokenIds, tokenIds, userAddress])
-
+    },[contractAddress, isLoading, loaded, setImages, setLoaded, setTokenIds, tokenIds, userAddress, valid])
     if (tokenIds === undefined){return <></>}
     const rendered: React.ReactElement[]= [];
     let itemKey = 0
-    
     for(let [key, value] of tokenIds) {
         let traits: any[] = []
         let jsonItemList = []
@@ -76,7 +75,11 @@ export const GetNFTs: React.FC<Props> = ({
             }
         }
         console.log(key, jsonItemList)
-        const component = React.createElement("div", {key: key}, '#', key, <br></br>, traits, <p></p>)
+        let keyImage = images?.get(key)       
+        keyImage = 'https://ipfs.io/ipfs/' + keyImage?.slice(7, keyImage.length)
+        let someImage = <></>
+        if (!images) { } else { someImage = React.createElement("img", {src: keyImage}, null) }
+        const component = React.createElement("div", {key: key}, <h2>#{key}</h2>, traits, someImage, <p><br></br></p>)
         rendered.push(component);
     }
     return <><span>{rendered}</span></>
