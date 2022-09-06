@@ -79,7 +79,7 @@ export const GetNFTs: React.FC<Props> = ({
             keyImage = 'https://ipfs.io/ipfs/' + keyImage?.slice(7, keyImage.length)
         }
         let someImage = <></>
-        if (!images) { } else { someImage = React.createElement("img", {src: keyImage}, null) }
+        if (!images) { } else { someImage = React.createElement("img", {src: keyImage, width: "100%"}, null) }
         const component = React.createElement("div", {key: key}, <h2>#{key}</h2>, traits, someImage, <p><br></br></p>)
         rendered.push(component);
     }
