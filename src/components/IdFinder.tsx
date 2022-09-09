@@ -2,7 +2,6 @@ import React from 'react';
 import {
     Card,
     CardBody,
-    Button,
     CardSubtitle,
     CardText,
     CardTitle,
@@ -102,7 +101,7 @@ export const GetNFTs: React.FC<Props> = ({
             
             className="p-2 mb-3 rounded"
             style={{
-                width: '18rem'
+                width: '20rem'
             }}
         >
         <img
@@ -111,7 +110,7 @@ export const GetNFTs: React.FC<Props> = ({
             
         />
         <CardBody>
-            <CardTitle tag="h5">
+            <CardTitle tag="h5" style={{color: 'goldenrod'}}>
             #{key}
             </CardTitle>
             <CardSubtitle

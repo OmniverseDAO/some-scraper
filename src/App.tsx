@@ -7,8 +7,6 @@ import { ethers } from 'ethers'
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 
-
-
 const App: React.FC = () => {
   const inputPlaceholder = '0x...<SomeNftAddress>'
   const [userAddress, setUserAddress] = useState<string>('')
@@ -20,7 +18,6 @@ const App: React.FC = () => {
   const [web3Modal, setWeb3Modal] = useState<Web3Modal>()
   const [network, setNetwork] = useState<ethers.providers.Network>();
   const [tokenIds, setTokenIds] = React.useState<Map<number, []>>()
-
 
   useEffect(() => {
       const API_KEY = process.env.REACT_APP_INFRA_API_KEY
@@ -88,9 +85,18 @@ const App: React.FC = () => {
         <h6 className="text-muted"><small>This versoin is only working with ETH network currenting</small></h6>
         <h6>
           <button hidden={!network} onClick={disconnect}>Disconnect</button>
-          <div>Chain Status: {network?.name} <br></br>Chain ID: {network?.chainId}</div>
-          
-          <div>Wallet Address: <br></br> {userAddress}</div>
+          <div>
+            Chain Status: 
+            <small> {network?.name}</small> 
+            <br></br>
+            Chain ID: 
+            <small> {network?.chainId}</small>
+          </div>
+          <div>
+            Wallet Address: 
+            <br></br>
+            <small>{userAddress}</small>
+          </div>
         </h6>
         <div hidden={!someMsg}>{someMsg}</div>
         <InputForm
