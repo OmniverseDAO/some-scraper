@@ -7,6 +7,8 @@ import { ethers } from 'ethers'
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 
+
+
 const App: React.FC = () => {
   const inputPlaceholder = '0x...<SomeNftAddress>'
   const [userAddress, setUserAddress] = useState<string>('')
@@ -17,7 +19,8 @@ const App: React.FC = () => {
   const [provider, setProvider] = useState<ethers.providers.Web3Provider>()
   const [web3Modal, setWeb3Modal] = useState<Web3Modal>()
   const [network, setNetwork] = useState<ethers.providers.Network>();
-  const [account, setAccount] = useState<string>();
+  const [tokenIds, setTokenIds] = React.useState<Map<number, []>>()
+
 
   useEffect(() => {
       const API_KEY = process.env.REACT_APP_INFRA_API_KEY
@@ -36,39 +39,13 @@ const App: React.FC = () => {
       });
       setWeb3Modal(newWeb3Modal)
 
-      if (provider?.on) {
-        const handleAccountsChanged = (accounts: React.SetStateAction<string | undefined>) => {
-          setAccount(accounts);
-        };
-    
-        const handleChainChanged = (network: React.SetStateAction<ethers.providers.Network | undefined>) => {
-          setNetwork(network);
-        };
-    
-        const handleDisconnect = () => {
-          disconnect();
-        };
-    
-        provider.on("accountsChanged", handleAccountsChanged);
-        provider.on("chainChanged", handleChainChanged);
-        provider.on("disconnect", handleDisconnect);
-    
-        return () => {
-          if (provider.removeListener) {
-            provider.removeListener("accountsChanged", handleAccountsChanged);
-            provider.removeListener("chainChanged", handleChainChanged);
-            provider.removeListener("disconnect", handleDisconnect);
-          }
-        };
-      }
-
   // eslint-disable-next-line react-hooks/exhaustive-deps
 }, [provider]);
   
   const refreshState = () => {
     setUserAddress('')
-    setAccount(undefined);
     setNetwork(undefined);
+    setTokenIds(undefined)
   };
 
   const disconnect = async () => {
@@ -83,10 +60,8 @@ const App: React.FC = () => {
       const web3Provider = new ethers.providers.Web3Provider(instance);
       const signer = web3Provider.getSigner();
       const network = await web3Provider.getNetwork();
-      const accounts = await web3Provider.listAccounts();
-      setProvider(instance);
+      setProvider(web3Provider);
       setUserAddress(await signer.getAddress())
-      if (accounts) setAccount(accounts[0]);
       setNetwork(network)
     } catch (error) {
       console.error(error);
@@ -95,13 +70,13 @@ const App: React.FC = () => {
 
   const handleOnSubmit = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
+    setTokenIds(undefined)
     getProvider()
     if (!ethers.utils.isAddress(contractAddress) ) { setValid(false); setSomeMsg('Need Valid Address') } 
     else { setValid(true); setSomeMsg('') }
     setSomeMsg('') //hides message block
     setLoaded(false) //resets loaded before new fetch
     console.log(contractAddress);
-    
   };
 
   return (
@@ -110,11 +85,12 @@ const App: React.FC = () => {
       <>
         <h1>Zem's NFT Scraper</h1>
         <img src={logo} className="App-logo" alt="logo" />
+        <h6 className="text-muted"><small>This versoin is only working with ETH network currenting</small></h6>
         <h6>
-          <button onClick={disconnect}>Disconnect</button>
-          <div>Chain Name: {network?.name} <br></br>Chain ID: {network?.chainId}</div>
-          <br></br>
-          <div>Wallet Address: <br></br> {account}</div>
+          <button hidden={!network} onClick={disconnect}>Disconnect</button>
+          <div>Chain Status: {network?.name} <br></br>Chain ID: {network?.chainId}</div>
+          
+          <div>Wallet Address: <br></br> {userAddress}</div>
         </h6>
         <div hidden={!someMsg}>{someMsg}</div>
         <InputForm
@@ -125,6 +101,7 @@ const App: React.FC = () => {
           handleOnSubmit={handleOnSubmit}
           placeholder={inputPlaceholder}
         />
+        
         <h5 hidden={!valid}>
           <GetNFTs 
             userAddress={userAddress}
@@ -132,6 +109,8 @@ const App: React.FC = () => {
             loaded={loaded}
             setLoaded={setLoaded}
             valid={valid}
+            tokenIds={tokenIds}
+            setTokenIds={setTokenIds}
           />
         </h5>
       </>

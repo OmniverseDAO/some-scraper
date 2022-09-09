@@ -1,4 +1,12 @@
 import React from 'react';
+import {
+    Card,
+    CardBody,
+    Button,
+    CardSubtitle,
+    CardText,
+    CardTitle,
+  } from "reactstrap";
 
 type Props = {
     contractAddress: string;
@@ -6,6 +14,8 @@ type Props = {
     loaded: boolean;
     setLoaded: (val: boolean) => void;
     valid: boolean;
+    tokenIds: Map<number, []> | undefined;
+    setTokenIds: (val: Map<number, []>  | undefined ) => void;
 }
 
 export const GetNFTs: React.FC<Props> = ({
@@ -14,10 +24,12 @@ export const GetNFTs: React.FC<Props> = ({
     loaded,
     setLoaded,
     valid,
+    tokenIds,
+    setTokenIds
 }) => {
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
-    const [tokenIds, setTokenIds] = React.useState<Map<number, []>>()
     const [images, setImages] = React.useState<Map<number, string>>()
+
     React.useEffect(() => {
         if (!isLoading && !tokenIds) {
             const API_KEY = process.env.REACT_APP_MORALIS_API_KEY
@@ -62,6 +74,7 @@ export const GetNFTs: React.FC<Props> = ({
     },[contractAddress, isLoading, loaded, setImages, setLoaded, setTokenIds, tokenIds, userAddress, valid])
     if (tokenIds === undefined){return <>None Found</>}
     const rendered: React.ReactElement[]= [];
+    
     let itemKey = 0
     for(let [key, value] of tokenIds) {
         let traits: any[] = []
@@ -78,12 +91,51 @@ export const GetNFTs: React.FC<Props> = ({
         if (keyImage?.substring(0,7) === 'ipfs://') { 
             keyImage = 'https://ipfs.io/ipfs/' + keyImage?.slice(7, keyImage.length)
         }
-        let someImage = <></>
-        if (!images) { } else { someImage = React.createElement("img", {src: keyImage, width: "100%"}, null) }
-        const component = React.createElement("div", {key: key}, <h2>#{key}</h2>, traits, someImage, <p><br></br></p>)
+        //let someImage = <></>
+        //if (!images) { } else { someImage = React.createElement("img", { src: keyImage, width: "100%" }, null) }
+        //const component = React.createElement("div", {key: key}, <h2>#{key}</h2>, traits,  <p><br></br></p>)
+        const openseaLink = "https://opensea.io/assets/ethereum/" + contractAddress + "/" + key
+        const component = React.createElement("div", {key: key},
+        <Card 
+            body 
+            color="dark" 
+            
+            className="p-2 mb-3 rounded"
+            style={{
+                width: '18rem'
+            }}
+        >
+        <img
+            alt="Sample"
+            src={keyImage}
+            
+        />
+        <CardBody>
+            <CardTitle tag="h5">
+            #{key}
+            </CardTitle>
+            <CardSubtitle
+            className="mb-2 text-muted"
+            tag="h6"
+            >
+            {traits}
+            </CardSubtitle>
+            <CardText>
+        
+            </CardText>
+            <a href={openseaLink} target="_blank" className='stretched-link' rel="noreferrer">
+                Opensea.io
+            </a>
+        </CardBody>
+        </Card>
+        )
         rendered.push(component);
     }
-    return <><span>{rendered}</span></>
+    return <>
+    
+        <span>{rendered}</span>
+        
+    </>
 }
 
 export default GetNFTs
