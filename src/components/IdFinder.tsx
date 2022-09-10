@@ -5,6 +5,8 @@ import {
     CardSubtitle,
     CardText,
     CardTitle,
+    Col,
+    Row,
   } from "reactstrap";
 
 type Props = {
@@ -95,45 +97,47 @@ export const GetNFTs: React.FC<Props> = ({
         //const component = React.createElement("div", {key: key}, <h2>#{key}</h2>, traits,  <p><br></br></p>)
         const openseaLink = "https://opensea.io/assets/ethereum/" + contractAddress + "/" + key
         const component = React.createElement("div", {key: key},
-        <Card 
-            body 
-            color="dark" 
-            
-            className="p-2 mb-3 rounded"
-            style={{
-                width: '20rem'
-            }}
-        >
-        <img
-            alt="Sample"
-            src={keyImage}
-            
-        />
-        <CardBody>
-            <CardTitle tag="h5" style={{color: 'goldenrod'}}>
-            #{key}
-            </CardTitle>
-            <CardSubtitle
-            className="mb-2 text-muted"
-            tag="h6"
+        <Col>
+            <Card 
+                body 
+                color="dark" 
+                className="p-2 mb-3 rounded bg-light border"
             >
-            {traits}
-            </CardSubtitle>
-            <CardText>
-        
-            </CardText>
-            <a href={openseaLink} target="_blank" className='stretched-link' rel="noreferrer">
-                Opensea.io
-            </a>
-        </CardBody>
-        </Card>
+            <img
+                id={'someImage'}
+                alt={keyImage}
+                src={keyImage}   
+            />
+            <CardBody>
+                <CardTitle tag="h5" style={{color: 'goldenrod'}}>
+                #{key}
+                </CardTitle>
+                <CardSubtitle
+                className="mb-2 text-muted"
+                tag="h6"
+                >
+                    {traits}
+                </CardSubtitle>
+                <CardText>
+                    <a href={openseaLink} target="_blank" rel="noreferrer" className="stretched-link">
+                        Opensea.io </a>
+                </CardText>
+            </CardBody>
+            </Card>
+        </Col>
         )
         rendered.push(component);
     }
-    return <>
     
-        <span>{rendered}</span>
-        
+    return <>
+        <Row
+          xl="4"
+          lg="3"
+          sm="2"
+          xs="1"
+        >
+            {rendered}
+        </Row>
     </>
 }
 

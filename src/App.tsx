@@ -6,6 +6,7 @@ import GetNFTs from './components/IdFinder'
 import { ethers } from 'ethers'
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
+import { Container, FormGroup, Input, InputGroup, InputGroupText, Label } from 'reactstrap';
 
 const App: React.FC = () => {
   const inputPlaceholder = '0x...<SomeNftAddress>'
@@ -18,6 +19,7 @@ const App: React.FC = () => {
   const [web3Modal, setWeb3Modal] = useState<Web3Modal>()
   const [network, setNetwork] = useState<ethers.providers.Network>();
   const [tokenIds, setTokenIds] = React.useState<Map<number, []>>()
+  const [showInput, setShowInput] = useState(true);
 
   useEffect(() => {
       const API_KEY = process.env.REACT_APP_INFRA_API_KEY
@@ -41,6 +43,7 @@ const App: React.FC = () => {
   
   const refreshState = () => {
     setUserAddress('')
+    setProvider(undefined)
     setNetwork(undefined);
     setTokenIds(undefined)
   };
@@ -99,7 +102,13 @@ const App: React.FC = () => {
           </div>
         </h6>
         <div hidden={!someMsg}>{someMsg}</div>
-        <InputForm
+
+      </>
+    </header>
+    <body>
+      
+      <br></br>
+      <InputForm
           setValid={setValid}
           setSomeMsg={setSomeMsg}
           contractAddress={contractAddress}
@@ -107,7 +116,7 @@ const App: React.FC = () => {
           handleOnSubmit={handleOnSubmit}
           placeholder={inputPlaceholder}
         />
-        
+    <Container fluid>
         <h5 hidden={!valid}>
           <GetNFTs 
             userAddress={userAddress}
@@ -119,8 +128,8 @@ const App: React.FC = () => {
             setTokenIds={setTokenIds}
           />
         </h5>
-      </>
-    </header>
+    </Container>
+    </body>
   </div>
   );
 }
