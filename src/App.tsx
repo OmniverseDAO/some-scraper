@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import logo from './logo.svg';
+import logo from './KryptoriaAlphaCitizens.gif';
 import './App.css';
 import InputForm from './components/InputForm';
 import GetNFTs from './components/IdFinder'
