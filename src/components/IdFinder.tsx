@@ -8,6 +8,7 @@ import {
     CardTitle,
     Col,
     Row,
+    Spinner,
   } from "reactstrap";
 
 type Props = {
@@ -103,6 +104,9 @@ export const GetNFTs: React.FC<Props> = ({
         //if (!images) { } else { someImage = React.createElement("img", { src: keyImage, width: "100%" }, null) }
         //const component = React.createElement("div", {key: key}, <h2>#{key}</h2>, traits,  <p><br></br></p>)
         const openseaLink = "https://opensea.io/assets/ethereum/" + contractAddress + "/" + key
+        
+        let loaded = false
+
         const component = React.createElement("div", {key: key},
         <Col>
             <Card 
@@ -115,11 +119,14 @@ export const GetNFTs: React.FC<Props> = ({
                 <br/>
                 <GiAbdominalArmor/> {aType}  
             </div>
-            <img
+            { loaded ? <></> : <Spinner animation="border" /> }
+            <img 
+                onLoad={() => loaded = true}
+                style={loaded ? {} : { display: 'none' }}
                 id={'someImage'}
                 alt={keyImage}
-                src={keyImage}   
-            />
+                src={keyImage}
+            /> 
             <CardBody>
                 <CardTitle tag="h5" style={{color: 'goldenrod'}}>
                 #{key}
