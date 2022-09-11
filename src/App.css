@@ -28,9 +28,7 @@
 .App-link {
   color: #61dafb;
 }
-body {
-  background-color: dimgrey;
-}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate3d(0, 0, 0, 0deg);
@@ -79,6 +77,16 @@ h1 {
   color: steelblue
 }
 
+body {
+  background-color: dimgrey;
+}
+
 .Card {
   margin: 5px;
+}
+
+div.icons {
+  text-align: left;
+  color: honeydew;
+  margin-bottom: 5px;
 }

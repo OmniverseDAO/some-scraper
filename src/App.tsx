@@ -6,12 +6,12 @@ import GetNFTs from './components/IdFinder'
 import { ethers } from 'ethers'
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
-import { Container, FormGroup, Input, InputGroup, InputGroupText, Label } from 'reactstrap';
+import { Container } from 'reactstrap';
 
 const App: React.FC = () => {
 
   const [someMsg, setSomeMsg] = useState<string>('')
-  const [contractAddress, setContractAddress] = useState("")
+  const [contractAddress, setContractAddress] = useState("0x63d85ec7b1561818ec03e158ec125a4113038a00")
   const [loaded, setLoaded] = useState<boolean>(false)
   const [valid, setValid] = useState<boolean>(false)
   const [tokenIds, setTokenIds] = useState<Map<number, []>>()
@@ -57,7 +57,6 @@ const App: React.FC = () => {
         <br />
       </>
     </header>
-    <body>
     <Container fluid>
         <h5 hidden={!valid}>
           <GetNFTs 
@@ -71,7 +70,6 @@ const App: React.FC = () => {
           />
         </h5>
     </Container>
-    </body>
   </div>
   );
 }

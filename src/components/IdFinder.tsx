@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { GiAbdominalArmor, GiSamusHelmet } from 'react-icons/gi'
 import {
     Card,
     CardBody,
@@ -28,8 +29,8 @@ export const GetNFTs: React.FC<Props> = ({
     tokenIds,
     setTokenIds
 }) => {
-    const [isLoading, setIsLoading] = React.useState<boolean>(false);
-    const [images, setImages] = React.useState<Map<number, string>>()
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [images, setImages] = useState<Map<number, string>>()
 
     React.useEffect(() => {
         if (!isLoading && !tokenIds) {
@@ -78,14 +79,20 @@ export const GetNFTs: React.FC<Props> = ({
     
     let itemKey = 0
     for(let [key, value] of tokenIds) {
+        
         let traits: any[] = []
         let jsonItemList = []
+        let aType
+        let hType
         for(let item of value) {
             const jsonItem = JSON.parse(JSON.stringify(item))
-            if (jsonItem.trait_type !== undefined) { 
+            if (jsonItem.trait_type !== undefined && jsonItem.value !== 'None' && jsonItem.value !== 0) { 
                 traits.push(React.createElement("div", {key: itemKey++}, jsonItem.trait_type, ' : ', jsonItem.value))
                 jsonItemList.push(jsonItem) 
+                if (jsonItem.trait_type === 'ARMOUR' && !aType){ aType =jsonItem.value } 
+                if (jsonItem.trait_type === 'HELMET' && !hType){ hType = jsonItem.value } 
             }
+        
         }
         console.log(key, jsonItemList)
         let keyImage = images?.get(key)
@@ -103,6 +110,11 @@ export const GetNFTs: React.FC<Props> = ({
                 color="dark" 
                 className="Card p-2 mb-3 rounded bg-light border"
             >
+            <div className='icons'>
+                <GiAbdominalArmor/> {aType} 
+                <br/>
+                <GiSamusHelmet /> {hType}
+            </div>
             <img
                 id={'someImage'}
                 alt={keyImage}
@@ -122,6 +134,7 @@ export const GetNFTs: React.FC<Props> = ({
                     <a href={openseaLink} target="_blank" rel="noreferrer" className="stretched-link">
                         Opensea.io </a>
                 </CardText>
+
             </CardBody>
             </Card>
         </Col>
