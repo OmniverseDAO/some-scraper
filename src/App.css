@@ -1,6 +1,7 @@
 
 .App {
   text-align: center;
+  cursor: url(https://ani.cursors-4u.net/cursors/cur-12/cur1080.cur),auto!important;
 }
 
 .App-logo {
@@ -16,13 +17,14 @@
 
 .App-header {
   background-color: #282c34;
-  min-height: auto;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: darkkhaki;
+  
 }
 
 .App-link {
@@ -79,10 +81,19 @@ h1 {
 
 body {
   background-color: dimgrey;
+  
 }
 
 .Card {
   margin: 5px;
+}
+
+.Card:hover {
+  opacity: 70%;
+}
+
+a:hover {
+  cursor: url(https://ani.cursors-4u.net/cursors/cur-12/cur1080.cur),auto!important;
 }
 
 div.icons {

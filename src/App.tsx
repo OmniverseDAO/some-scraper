@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import logo from './KryptoriaAlphaCitizens.gif';
+import logo from './Kryptoria_Without_BG_1.png';
 import './App.css';
 import InputForm from './components/InputForm';
 import GetNFTs from './components/IdFinder'
@@ -42,8 +42,7 @@ const App: React.FC = () => {
         />
         <br />
       </>
-    </header>
-    <Container fluid>
+      <Container fluid>
         <h5 hidden={!valid}>
           <GetNFTs 
             holderAddress={holderAddress}
@@ -57,6 +56,8 @@ const App: React.FC = () => {
           />
         </h5>
     </Container>
+    </header>
+    
   </div>
   );
 }
