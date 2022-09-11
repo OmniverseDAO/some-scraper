@@ -111,9 +111,9 @@ export const GetNFTs: React.FC<Props> = ({
                 className="Card p-2 mb-3 rounded bg-light border"
             >
             <div className='icons'>
-                <GiAbdominalArmor/> {aType} 
-                <br/>
                 <GiSamusHelmet /> {hType}
+                <br/>
+                <GiAbdominalArmor/> {aType}  
             </div>
             <img
                 id={'someImage'}
