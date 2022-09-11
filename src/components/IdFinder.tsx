@@ -35,7 +35,6 @@ export const GetNFTs: React.FC<Props> = ({
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [images, setImages] = useState<Map<number, string>>()
     
-
     React.useEffect(() => {
         if (!isLoading && !tokenIds) {
             const API_KEY = process.env.REACT_APP_MORALIS_API_KEY
@@ -80,15 +79,9 @@ export const GetNFTs: React.FC<Props> = ({
     },[contractAddress, isLoading, loaded, setImages, setLoaded, setTokenIds, tokenIds, holderAddress, valid])
     if (tokenIds === undefined){return <>None Found</>}
     const rendered: React.ReactElement[]= [];
-    const Loaded = (key: number, isLoaded: boolean) => {
-        
-        imageMap.set(key, isLoaded)
-
-    }
-    
     let itemKey = 0
     for(let [key, value] of tokenIds) {
-        let imageLoaded = imageMap.get(key)
+        const openseaLink = "https://opensea.io/assets/ethereum/" + contractAddress + "/" + key
         let traits: any[] = []
         let jsonItemList = []
         let aType
@@ -108,13 +101,6 @@ export const GetNFTs: React.FC<Props> = ({
         if (keyImage?.substring(0,7) === 'ipfs://') { 
             keyImage = 'https://ipfs.io/ipfs/' + keyImage?.slice(7, keyImage.length)
         }
-        //let someImage = <></>
-        //if (!images) { } else { someImage = React.createElement("img", { src: keyImage, width: "100%" }, null) }
-        //const component = React.createElement("div", {key: key}, <h2>#{key}</h2>, traits,  <p><br></br></p>)
-        const openseaLink = "https://opensea.io/assets/ethereum/" + contractAddress + "/" + key
-        
-        
-
         const component = React.createElement("div", {key: key},
         <Col>
             <Card 
@@ -122,53 +108,39 @@ export const GetNFTs: React.FC<Props> = ({
                 color="dark" 
                 className="Card p-2 mb-3 rounded bg-light border"
             >
-            <div className='icons'>
-                <GiSamusHelmet /> {hType}
-                <br/>
-                <GiAbdominalArmor/> {aType}  
-            </div>
-            
-            <img 
-                onLoad={() => Loaded(key, true)}
-                style={!imageLoaded ? {} : { display: 'none' }}
-                id={'someImage'}
-                alt={keyImage}
-                src={keyImage}
-            />
-            <CardBody>
-                {imageLoaded ? <Spinner animation="border" color="light" /> : <></> }
-                <CardTitle tag="h5" style={{color: 'goldenrod'}}>
-                #{key}
-                </CardTitle>
-                <CardSubtitle
-                className="mb-2 text-muted"
-                tag="h6"
-                >
-                    {traits}
-                </CardSubtitle>
-                <CardText>
-                    <a href={openseaLink} target="_blank" rel="noreferrer" className="stretched-link">
-                        Opensea.io </a>
-                </CardText>
+                <div className='icons'>
+                    <GiSamusHelmet /> {hType}
+                    <br/>
+                    <GiAbdominalArmor/> {aType}  
+                </div>
+                <img 
+                    id={'someImage'}
+                    alt={keyImage}
+                    src={keyImage}
+                />
+                <CardBody>
+                    <CardTitle tag="h5" style={{color: 'goldenrod'}}>
+                    #{key}
+                    </CardTitle>
+                    <CardSubtitle
+                    className="mb-2 text-muted"
+                    tag="h6"
+                    >
+                        {traits}
+                    </CardSubtitle>
+                    <CardText>
+                        <a href={openseaLink} target="_blank" rel="noreferrer" className="stretched-link">
+                            Opensea.io </a>
+                    </CardText>
 
-            </CardBody>
+                </CardBody>
             </Card>
-            
         </Col>
         )
         rendered.push(component);
     }
     
-    return <>
-        <Row
-          xl="4"
-          lg="3"
-          sm="2"
-          xs="1"
-        >
-            {rendered}
-        </Row>
-    </>
+    return <Row xl="4" lg="3"sm="2" xs="1">{rendered}</Row>
 }
 
 export default GetNFTs
