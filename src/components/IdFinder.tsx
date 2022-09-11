@@ -11,7 +11,7 @@ import {
 
 type Props = {
     contractAddress: string;
-    userAddress: string;
+    holderAddress: string;
     loaded: boolean;
     setLoaded: (val: boolean) => void;
     valid: boolean;
@@ -21,7 +21,7 @@ type Props = {
 
 export const GetNFTs: React.FC<Props> = ({
     contractAddress,
-    userAddress,
+    holderAddress,
     loaded,
     setLoaded,
     valid,
@@ -42,11 +42,11 @@ export const GetNFTs: React.FC<Props> = ({
                         'X-API-Key': API_KEY
                     }
                 }
-                if (!userAddress || !valid || loaded) {} else {
+                if (!holderAddress || !valid || loaded) {} else {
                     setIsLoading(true)
                     setTokenIds(new Map<number, []>())
                     const fetchUrl = 'https://deep-index.moralis.io/api/v2/' + 
-                    userAddress + '/nft/' + contractAddress + '?chain=eth&format=decimal'
+                    holderAddress + '/nft/' + contractAddress + '?chain=eth&format=decimal'
                     fetch(fetchUrl, options)
                     .then(response => response.json())
                     .then(response => { 
@@ -72,7 +72,7 @@ export const GetNFTs: React.FC<Props> = ({
                 }      
             }
         }
-    },[contractAddress, isLoading, loaded, setImages, setLoaded, setTokenIds, tokenIds, userAddress, valid])
+    },[contractAddress, isLoading, loaded, setImages, setLoaded, setTokenIds, tokenIds, holderAddress, valid])
     if (tokenIds === undefined){return <>None Found</>}
     const rendered: React.ReactElement[]= [];
     
@@ -101,7 +101,7 @@ export const GetNFTs: React.FC<Props> = ({
             <Card 
                 body 
                 color="dark" 
-                className="p-2 mb-3 rounded bg-light border"
+                className="Card p-2 mb-3 rounded bg-light border"
             >
             <img
                 id={'someImage'}

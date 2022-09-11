@@ -66,7 +66,7 @@ input {
   color: darkviolet;
   margin-bottom: 1em;
   font: 400 16px system-ui;
-  inline-size: 22.5em;
+  inline-size: 23rem;
   padding-left: .2em;
 }
 /* color change  */
@@ -77,4 +77,8 @@ input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
 
 h1 {
   color: steelblue
+}
+
+.Card {
+  margin: 5px;
 }
