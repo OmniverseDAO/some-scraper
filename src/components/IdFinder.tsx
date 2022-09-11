@@ -19,6 +19,7 @@ type Props = {
     valid: boolean;
     tokenIds: Map<number, []> | undefined;
     setTokenIds: (val: Map<number, []>  | undefined ) => void;
+    imageMap: Map<number, boolean>;
 }
 
 export const GetNFTs: React.FC<Props> = ({
@@ -28,10 +29,12 @@ export const GetNFTs: React.FC<Props> = ({
     setLoaded,
     valid,
     tokenIds,
-    setTokenIds
+    setTokenIds,
+    imageMap
 }) => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [images, setImages] = useState<Map<number, string>>()
+    
 
     React.useEffect(() => {
         if (!isLoading && !tokenIds) {
@@ -77,10 +80,15 @@ export const GetNFTs: React.FC<Props> = ({
     },[contractAddress, isLoading, loaded, setImages, setLoaded, setTokenIds, tokenIds, holderAddress, valid])
     if (tokenIds === undefined){return <>None Found</>}
     const rendered: React.ReactElement[]= [];
+    const Loaded = (key: number, isLoaded: boolean) => {
+        
+        imageMap.set(key, isLoaded)
+
+    }
     
     let itemKey = 0
     for(let [key, value] of tokenIds) {
-        
+        let imageLoaded = imageMap.get(key)
         let traits: any[] = []
         let jsonItemList = []
         let aType
@@ -105,7 +113,7 @@ export const GetNFTs: React.FC<Props> = ({
         //const component = React.createElement("div", {key: key}, <h2>#{key}</h2>, traits,  <p><br></br></p>)
         const openseaLink = "https://opensea.io/assets/ethereum/" + contractAddress + "/" + key
         
-        let loaded = false
+        
 
         const component = React.createElement("div", {key: key},
         <Col>
@@ -119,15 +127,16 @@ export const GetNFTs: React.FC<Props> = ({
                 <br/>
                 <GiAbdominalArmor/> {aType}  
             </div>
-            { loaded ? <></> : <Spinner animation="border" /> }
+            
             <img 
-                onLoad={() => loaded = true}
-                style={!loaded ? {} : { display: 'none' }}
+                onLoad={() => Loaded(key, true)}
+                style={!imageLoaded ? {} : { display: 'none' }}
                 id={'someImage'}
                 alt={keyImage}
                 src={keyImage}
-            /> 
+            />
             <CardBody>
+                {imageLoaded ? <Spinner animation="border" color="light" /> : <></> }
                 <CardTitle tag="h5" style={{color: 'goldenrod'}}>
                 #{key}
                 </CardTitle>
@@ -144,6 +153,7 @@ export const GetNFTs: React.FC<Props> = ({
 
             </CardBody>
             </Card>
+            
         </Col>
         )
         rendered.push(component);

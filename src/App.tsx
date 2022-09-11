@@ -13,6 +13,7 @@ const App: React.FC = () => {
   const [valid, setValid] = useState<boolean>(false)
   const [tokenIds, setTokenIds] = useState<Map<number, []>>()
   const [holderAddress, setHolderAddress] = useState<string>('')
+  let imageMap = new Map<number, boolean>()
 
   const handleOnSubmit = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
@@ -52,6 +53,7 @@ const App: React.FC = () => {
             valid={valid}
             tokenIds={tokenIds}
             setTokenIds={setTokenIds}
+            imageMap={imageMap}
           />
         </h5>
     </Container>
