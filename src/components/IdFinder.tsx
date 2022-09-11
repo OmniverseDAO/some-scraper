@@ -122,7 +122,7 @@ export const GetNFTs: React.FC<Props> = ({
             { loaded ? <></> : <Spinner animation="border" /> }
             <img 
                 onLoad={() => loaded = true}
-                style={loaded ? {} : { display: 'none' }}
+                style={!loaded ? {} : { display: 'none' }}
                 id={'someImage'}
                 alt={keyImage}
                 src={keyImage}

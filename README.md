@@ -1,7 +1,9 @@
-# * Set .env with moralis and infra API keys
+# * Set .env with moralis api key *
+# `yarn install`
+# `yarn start`
 
 
-# Getting Started with Create React App
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
